@@ -1,5 +1,4 @@
 from setuptools import setup, find_packages
-from subprocess import check_output
 
 with open('requirements.txt') as f:
     required = f.read().splitlines()
@@ -29,7 +28,7 @@ setup(
     },
     data_files = [
         ('/usr/lib/systemd/system', ['pkg/moira-api.service', 'pkg/moira-checker.service']),
-        ('/etc/moira/', ['pkg/worker.yml', 'pkg/storage-shemas.conf']),
+        ('/etc/moira/', ['pkg/worker.yml']),
     ],
     install_requires = required,
 )
