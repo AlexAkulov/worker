@@ -1,21 +1,19 @@
 language: python
 python:
-  - "2.7"
-# command to install dependencies
-install:
-  - pip install -r requirements.txt
-  - pip install coveralls
-# command to run tests
+  - '2.7'
 script:
-  cd tests && coverage run --source="../moira/" --omit="../moira/graphite/*,../moira/metrics/*" $(which trial) functional cache expression
-
-after_success:
-  coveralls
-
-notifications:
-  webhooks:
-    urls:
-      - https://webhooks.gitter.im/e/9992cd0d36a6ba9bb40b
-    on_success: change
-    on_failure: always
-    on_start: never
+  - make test
+  - coveralls
+  - make pip
+before_deploy:
+  - export RELEASE_PIP_TAR=$(ls dist/moira_worker-*.tar.gz)
+deploy:
+  provider: releases
+  api_key:
+    secure: wcYwP7hy1INgeOGwjjYJKMc9u83XCLZUL5HUnqXQ08JKLVCxvShdoKapRvZWCNlNPgO73msQraqCSeeLgqMt9KDtaXL0jVYIvJZ9rNn0RncCA0Yq9S7Gac1+rDdDHcAamXvM75q2nQwHceBYzHzt5k7BNjMs3T53aVA0w3Kui3e6meyu4BIwxpxm28y2vIaYuIHfoHBS0jC1eRE9k582kkebpDMR+6Q3OzOgC/Xj4big/WwiBQ1oREFLwMx6fUWfTfmLTOiyuUcSOa4dnb8Uzy2xW+PP3teo8lT03WpAywnIu4+5wXn+w3V5zrWlPgLnI2WYyUZTCmzKmI9GWVbRtACXxSfEqZ9QmXGFldtkfR9KniRpbjgU0FzFOjkvs2ZSmwqti29aHkKMv3CocpxhLZEligCZRbtw69ktWklUMcYv5AlzP6x9GCBB/NOXSDyB2c/FloIORl7Ix+MH8jFejGWtrmUmjSZQbtQlHpxVyoEG7Sf7ZnMn/mHuqc0UP/HaJzvNGnQ48/qRtXqYtbV/mro6N/3q/7zViSbp64tYFCAN6MdyCXZ4lQfVLbLnym0bZQ0sOI5baJTvtAjTQGhAOjFwKmD9mD0fKMcqGB2cNkzM6+drHYQbHf7AB69STI++tRvubb/4Jxdx7FUttpZ1EyPiFgrgcRIel2wJZLQJhF8=
+  file:
+    - "${RELEASE_PIP_TAR}"
+  skip_cleanup: true
+  on:
+    tags: true
+    condition: $TRAVIS_PYTHON_VERSION = 2.7
