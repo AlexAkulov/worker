@@ -7,7 +7,7 @@ install:
 script:
   - make test
 after_success:
-  - coveralls
+  - cd tests && coveralls
   - make pip
 before_deploy:
   - export RELEASE_PIP_TAR=$(ls dist/moira_worker-*.tar.gz)
