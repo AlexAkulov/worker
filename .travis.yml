@@ -1,8 +1,11 @@
 language: python
 python:
   - '2.7'
+install:
+  - pip install coveralls
 script:
   - make test
+after_success:
   - coveralls
   - make pip
 before_deploy:

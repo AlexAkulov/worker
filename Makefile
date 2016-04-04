@@ -1,20 +1,22 @@
 VERSION := $(shell git describe --always --tags --abbrev=0 | tail -c +2)
 RELEASE := $(shell git describe --always --tags | awk -F- '{ if ($$2) dot="."} END { printf "1%s%s%s%s\n",dot,$$2,dot,$$3}')
 PIP_VERSION := $(shell git describe --always --tags | tail -c +2 | awk -F- '{ if ($$2) printf "%s.dev%s-%s\n",$$1,$$2,$$3; else print $$1 }')
+TRIAL := $(shell which trial)
 
 VENDOR := "SKB Kontur"
 URL := "https://github.com/moira-alert"
 LICENSE := "GPLv3"
+
+default: clean prepare test pip
 
 version:
 	echo $(PIP_VERSION) > version.txt
 
 prepare:
 	pip install -r requirements.txt
-	pip install coverage
 
-test: prepare
-	cd tests && coverage run --source="../moira/" --omit="../moira/graphite/*,../moira/metrics/*" /usr/bin/trial functional cache expression
+test:
+	cd tests && coverage run --source="../moira/" --omit="../moira/graphite/*,../moira/metrics/*" $(TRIAL) functional cache expression
 
 pip: version
 	python setup.py sdist
