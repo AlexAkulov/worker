@@ -1,0 +1,12 @@
+#!/bin/sh
+
+set -e
+
+echo "---------------------------"
+
+pwd
+
+echo  "------------------------------"
+ls
+
+pip install -r requirements.txt
